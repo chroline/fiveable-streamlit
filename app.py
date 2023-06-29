@@ -16,7 +16,7 @@ def process_csv(file):
     st.markdown("* " + "\n* ".join(set(unique_categories)))
 
     # Print duplicates in the 2nd column
-    st.subheader("Duplicates in the 2nd Column")
+    st.subheader("Duplicate Terms")
     if len(duplicate_terms) > 0:
         st.markdown("* " + "\n* ".join(set(duplicate_terms)))
     else:
