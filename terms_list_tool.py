@@ -27,7 +27,7 @@ def process_csv(file):
 
 # Main Streamlit app code
 def main():
-    st.title("Term List Helper")
+    st.title("Terms List Tool")
     st.subheader("Extract categories and duplicates")
 
     # File upload widget
