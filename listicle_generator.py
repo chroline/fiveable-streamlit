@@ -81,7 +81,6 @@ def main():
 
         # Button to submit the list
         if st.button("Generate"):
-            print("HEY")
             # Split the input by new lines and remove leading/trailing spaces
             st.markdown("----")
             res_box = st.empty()
@@ -99,7 +98,6 @@ def main():
             report = []
             result = ""
             for resp in req:
-                print(resp)
                 try:
                     report.append(resp.choices[0].delta.content)
                     result = "".join(report).strip()
