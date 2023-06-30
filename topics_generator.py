@@ -30,7 +30,6 @@ def process_csv(file):
         st.markdown("**Generate topics from key topic:**")
         for value in key_topics:
             if st.button(value):
-                print(df)
                 topics = generate_topics(df[df['Key Topic'].astype(str) == value])
 
     st.text_area("Topics:", topics)
