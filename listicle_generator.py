@@ -45,7 +45,6 @@ def main():
     # Button to submit the list
     if st.button("Submit"):
         # Split the input by new lines and remove leading/trailing spaces
-        items = [item.strip() for item in topics.split("\n")]
         st.markdown("----")
         res_box = st.empty()
 
@@ -71,7 +70,6 @@ def main():
 
         st.divider()
         st.text_area("Output", result)
-
 
 
 if __name__ == '__main__':
