@@ -5,23 +5,35 @@ import streamlit as st
 
 openai.api_key = st.secrets['openai_api_key']
 
-prompt = """
-Write an article for Fiveable titled "{article_title}". I will provide you with a list of sub-topics to include. Please write ~1 paragraph for each sub-topic, and make an H2 heading for each.
+default_prompt = """\
+Write an article for Fiveable titled "{article_title}". I will provide you with a list of sub-topics to include.
 
 Here are the topics to include:
 {topics}
 
+Use an H2 heading for each topic in the following format: "## [EMOJI] [TOPIC]\\n" and nothing else.
+
+Please write ~1 paragraph for each sub-topic.
+
 Please also write a very brief introduction that reiterates the main topic. Don't add the title in your response.
 
-Write your response in a conversational and engaging tone using everyday language and casual expressions. Engage with the reader directly using the second person. Incorporate ample relevant visual elements such as emojis and tables to support your explanation. Use first-person narration and occasional interjections to make the reader feel like they're in a personal conversation with you. Use current affairs, historical facts, or real-world examples to illustrate your points. Be sure to emphasize key points for easy recall. Although the tone should be informal, ensure the content remains informative and academically accurate. Engage the reader with rhetorical questions to provoke thought and underline important points.
+Write your response in an engaging tone using everyday language and casual expressions.
+
+Avoid libertarian or conservative stances.
+
+When necessary, incorporate relevant visual elements such as emojis and tables to support your explanation. Limit 1-2 emojis per paragraph.
+
+Use first-person narration and occasional interjections to make the reader feel like they're in a personal conversation with you.
+
+Use current affairs, historical facts, or real-world examples to illustrate your points.
+
+Although the tone should be informal, ensure the content remains informative and academically accurate.
+
+Engage the reader with rhetorical questions to provoke thought and underline important points.
 
 Make sure your tone is friendly, warm, and encouraging throughout your response.
 
-When using ordered or numbered list, make them in Markdown format. Use markdown headings.
-
-Don't prompt the user to respond or launch into a discussion, but feel free to use rhetorical questions.
-
-Paragraphs should cite specific information, not just generalizations.
+Paragraphs should cite specific information, not just generalizations.\
 """
 
 st.title("Listicle Generator")
@@ -42,17 +54,17 @@ def process_csv(file):
 
     col1, col2 = st.columns(2)
     with col1:
-        categories = df["Category"].unique()
+        categories = df["Category"].unique().astype(str)
         st.markdown("**Generate topics from category:**")
-        for value in categories:
+        for value in categories[categories != 'nan']:
             if st.button(value):
                 topics = generate_topics(df[df['Category'] == value])
     with col2:
-        key_topics = df.iloc[:, 0].astype(str).unique()
+        key_topics = df.iloc[:, 0].astype(str).unique().astype(str)
         st.markdown("**Generate topics from key topic:**")
-        for value in key_topics:
+        for value in key_topics[key_topics != 'nan']:
             if st.button(value):
-                topics = generate_topics(df[df.iloc[:, 0].astype(str) == value])
+                topics = generate_topics(df[df.iloc[:, 0] == value])
 
     return topics
 
@@ -73,11 +85,14 @@ def main():
     if topics is not None:
         st.divider()
 
+        # Text input for the title
+        article_title = st.text_input("Title", "")
+
         topics_count = len(topics.split('\n'))
         st.text_area(f"{topics_count} topics:", topics)
 
-        # Text input for the title
-        article_title = st.text_input("Title", "")
+        prompt = st.text_area('Prompt', default_prompt)
+        st.caption("Ensure that {article_title} and {topics} is included in your prompt!")
 
         # Button to submit the list
         if st.button("Generate"):
